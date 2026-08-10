@@ -1,5 +1,5 @@
 name: UniFi Protect Air Quality Test
-version: "0.1.1"
+version: "0.1.2"
 slug: up_airquality_test
 description: Test bridge for UP-AirQuality sensors via UniFi Protect and MQTT discovery
 url: https://github.com/Tommo-101/UPAQ-MQTT

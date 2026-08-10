@@ -281,7 +281,7 @@ def publish_state(client: mqtt.Client | None, context: dict[str, Any]) -> None:
 
     print(f"UP-AirQuality {context['id']} readings: {json.dumps(payload, sort_keys=True)}", flush=True)
     if client:
-        client.publish(context["state_topic"], json.dumps(payload), qos=0, retain=False)
+        client.publish(context["state_topic"], json.dumps(payload), qos=1, retain=True)
         client.publish(context["availability_topic"], "online", qos=1, retain=True)
 
 
