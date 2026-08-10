@@ -147,6 +147,19 @@ def slug(value: Any) -> str:
     return "".join(char for char in str(value).lower() if char.isalnum())
 
 
+def entity_slug(value: Any) -> str:
+    parts = []
+    last_was_separator = True
+    for char in str(value).lower():
+        if char.isalnum():
+            parts.append(char)
+            last_was_separator = False
+        elif not last_was_separator:
+            parts.append("_")
+            last_was_separator = True
+    return "".join(parts).strip("_")
+
+
 def sensor_slug(device: dict[str, Any]) -> str:
     for key in ("mac", "id", "name"):
         value = device.get(key)
@@ -214,6 +227,7 @@ def publish_discovery(
     name: str,
 ) -> tuple[str, str]:
     mac = sensor_slug(device)
+    entity_base = entity_slug(name) or f"protect_air_quality_{mac}"
     node = f"protect_air_quality_{mac}"
     state_topic = f"up_airquality/{mac}/state"
     availability_topic = BRIDGE_AVAILABILITY_TOPIC
@@ -221,10 +235,12 @@ def publish_discovery(
 
     for key in sorted(device["airQuality"]):
         metadata = METRICS.get(key, {"name": key})
+        object_id = f"{entity_base}_{key}"
         config: dict[str, Any] = {
             "name": metadata["name"],
             "unique_id": f"up_aq_{mac}_{key}",
-            "object_id": f"{node}_{key}",
+            "object_id": object_id,
+            "default_entity_id": f"sensor.{object_id}",
             "state_topic": state_topic,
             "value_template": f"{{{{ value_json.{key} }}}}",
             "availability_topic": availability_topic,
@@ -248,6 +264,11 @@ def publish_discovery(
             retain=True,
         )
 
+    print(
+        f"MQTT Discovery entity IDs for {name}: "
+        f"{', '.join(f'sensor.{entity_base}_{key}' for key in sorted(device['airQuality']))}",
+        flush=True,
+    )
     return state_topic, availability_topic
 
 
