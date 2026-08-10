@@ -1,0 +1,36 @@
+name: UniFi Protect Air Quality Test
+version: "0.1.0"
+slug: up_airquality_test
+description: Test bridge for UP-AirQuality sensors via UniFi Protect and MQTT discovery
+url: https://github.com/Tommo-101/UPAQ-MQTT
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: services
+boot: auto
+init: false
+options:
+  protect_host: ""
+  protect_user: ""
+  protect_pass: ""
+  mqtt_host: ""
+  mqtt_port: 1883
+  mqtt_user: ""
+  mqtt_pass: ""
+  discovery_prefix: homeassistant
+  publish_mqtt: true
+  log_raw_airquality: true
+  verify_tls: false
+schema:
+  protect_host: str
+  protect_user: str
+  protect_pass: password
+  mqtt_host: str?
+  mqtt_port: port
+  mqtt_user: str?
+  mqtt_pass: password?
+  discovery_prefix: str
+  publish_mqtt: bool
+  log_raw_airquality: bool
+  verify_tls: bool
